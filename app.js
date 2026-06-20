@@ -17,7 +17,8 @@ const SPECIALTIES = {
   derma: "Dermatology (Skin Care)",
   chest: "Pulmonology & Chest Care",
   medicine: "General Medicine / Internal Medicine",
-  surgery: "General & Laparoscopic Surgery"
+  surgery: "General & Laparoscopic Surgery",
+  urology: "Urology (Urinary & Kidney Care)"
 };
 
 // --- Real Shahjahanpur Specialists Database (Sourced from Hospital portals) ---
@@ -184,7 +185,7 @@ const DOCTORS = [
   {
     id: "doc-puneetjain",
     name: "Dr. Puneet Jain",
-    degrees: "MBBS, MDS - Consultant Orthodontist",
+    degrees: "BDS, MDS - Consultant Orthodontist",
     specialty: "dental",
     experience: "12+ Years",
     rating: "4.8",
@@ -380,6 +381,75 @@ const DOCTORS = [
     },
     testimonials: [
       { id: "akash-t1", patient: "Aman Bajpai, Hadaf", text: "Got my laparoscopic gallstone surgery done by Dr. Akash. He explained the procedure very clearly and the recovery was extremely smooth.", thumb: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop" }
+    ]
+  },
+  {
+    id: "doc-shailendra",
+    name: "Dr. Shailendra Kishore Verma",
+    degrees: "MBBS, MD",
+    specialty: "medicine",
+    experience: "10+ Years",
+    rating: "4.9",
+    reviewsCount: 188,
+    hospital: "Senior Care Clinic",
+    fees: "₹300",
+    location: "Super Market, Star Marriage Lawn, Behind Kanojia Hospital, Shahjahanpur",
+    avatar: "assets/images/shailendra_verma.jpg",
+    bio: "Dr. Shailendra Kishore Verma is an AIIMS New Delhi–trained expert physician dealing with medical diseases across all age patients. Experienced in Ward, HDU, and ICU patient care, including critical care and COVID-19 management. Special interest in geriatric medicine, multimorbidity, frailty, and polypharmacy. Committed to evidence-based, ethical, and patient-centred healthcare.",
+    socials: {
+      instagram: "https://www.instagram.com/dr_shailen_md/",
+      facebook: "https://www.facebook.com/profile.php?id=61591242321982",
+      gmb: "https://www.google.com/maps/search/Dr+Shailendra+Kishore+Verma+Senior+Care+Clinic+Shahjahanpur",
+      website: "https://skv625.com/"
+    },
+    testimonials: [
+      { id: "skv-t1", patient: "R. P. Saxena, Civil Lines", text: "Dr. Shailendra's geriatric health package is a blessing for senior citizens in Shahjahanpur. Very detailed health monitoring.", thumb: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop" }
+    ]
+  },
+  {
+    id: "doc-tanmay",
+    name: "Dr. Tanmay Agrawal",
+    degrees: "MBBS",
+    specialty: "medicine",
+    experience: "6 Years",
+    rating: "4.8",
+    reviewsCount: 65,
+    hospital: "Alok Clinic",
+    fees: "₹300",
+    location: "Kaccha Katra mod, Shahjahanpur",
+    avatar: "assets/images/tanmay_agrawal.png",
+    bio: "Dr. Tanmay Agrawal is a dedicated General Physician with 6 years of experience in the field. He completed his MBBS from Rajiv Gandhi University of Health Sciences, Karnataka in 2016 and is registered with the Gujarat Medical Council. He specializes in managing chronic conditions, viral fevers, seasonal infections, and primary health concerns with a patient-centric approach.",
+    socials: {
+      instagram: "https://www.instagram.com/",
+      facebook: "https://www.facebook.com/",
+      gmb: "https://www.google.com/maps/search/Dr+Tanmay+Agrawal+Shahjahanpur",
+      website: "https://www.practo.com/shahjahanpur/doctor/tanmay-agrawal-s-o-sri-alok-agrawal-general-physician"
+    },
+    testimonials: [
+      { id: "tanmay-t1", patient: "Sanjay Gupta, Shahjahanpur", text: "Dr. Tanmay is highly compassionate and listens carefully to all complaints. Excellent treatment for viral fevers.", thumb: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200&auto=format&fit=crop" }
+    ]
+  },
+  {
+    id: "doc-mahesh",
+    name: "Dr. Mahesh Tripathi",
+    degrees: "MBBS, MS, M.Ch (Urology)",
+    specialty: "urology",
+    experience: "10+ Years",
+    rating: "4.9",
+    reviewsCount: 112,
+    hospital: "Satyanand Hospital",
+    fees: "₹600",
+    location: "Azizganj, Shahjahanpur",
+    avatar: "assets/images/mahesh_tripathi.png",
+    bio: "Dr. Mahesh Tripathi is a distinguished Urology specialist at Satyanand Hospital, Azizganj, Shahjahanpur. With over a decade of experience, Dr. Tripathi brings a wealth of expertise and compassion to his practice. His attainment of a Master of Chirurgiae (M.Ch) in Urology reflects his dedication to mastering the complexities of urological medicine, ensuring the delivery of advanced and specialized care.",
+    socials: {
+      instagram: "https://www.instagram.com/satyanandhospitalpvt.ltd?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==",
+      facebook: "https://www.facebook.com/profile.php?id=100065378743239",
+      gmb: "https://www.google.com/maps/search/Satyanand+Hospital+Azizganj+Shahjahanpur",
+      website: "https://www.satyanandhospital.co.in/doctors/uro-surgery-dr-maheshtripati.html"
+    },
+    testimonials: [
+      { id: "mahesh-t1", patient: "Rajesh Kumar, Shahjahanpur", text: "Highly skilled urosurgeon. Dr. Mahesh successfully treated my kidney stone problem at Satyanand Hospital. Outstanding care.", thumb: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop" }
     ]
   }
 ];
@@ -945,6 +1015,8 @@ function handleBookingSubmit(e) {
   const symptoms = formData.get("patient-symptoms");
   const bDate = formData.get("booking-date");
   const bTime = formData.get("booking-time");
+  const referredBy = formData.get("referred-by");
+  const referredByPhone = formData.get("referred-by-phone");
 
   const newBooking = {
     id: bookingId,
@@ -960,6 +1032,8 @@ function handleBookingSubmit(e) {
     symptoms: symptoms,
     date: bDate,
     time: bTime,
+    referredBy: referredBy,
+    referredByPhone: referredByPhone,
     reportName: State.uploadedFileName,
     status: "confirmed",
     timestamp: new Date().toISOString()
@@ -995,6 +1069,9 @@ function handleBookingSubmit(e) {
 *Age & Gender:* ${age} Yrs, ${gender}
 *Contact Phone:* ${phone}
 *Symptoms:* ${symptoms}
+
+*Referred By:* ${referredBy}
+*Referrer Phone:* ${referredByPhone}
 
 *Specialist Doctor:* ${doc.name}
 *Clinic/Hospital:* ${doc.hospital}
@@ -1169,6 +1246,14 @@ function renderConfirmationCard(booking) {
         <span class="conf-lbl">Referral Consultation Fee</span>
         <span class="conf-val">${booking.doctorFees}</span>
       </div>
+      <div class="conf-row">
+        <span class="conf-lbl">Referred By</span>
+        <span class="conf-val">${booking.referredBy || 'N/A'}</span>
+      </div>
+      <div class="conf-row">
+        <span class="conf-lbl">Referrer Phone</span>
+        <span class="conf-val">${booking.referredByPhone || 'N/A'}</span>
+      </div>
       
       ${isConfirmed ? `
         <div class="conf-row" style="flex-direction: column; align-items: flex-start; gap: 8px; border-bottom: none; padding-bottom: 0;">
@@ -1204,7 +1289,7 @@ function renderConfirmationCard(booking) {
 
       <!-- WhatsApp and Call Support Actions directly containing Referral Details -->
       <div class="conf-support-row">
-        <a href="https://wa.me/919336300420?text=Hello%20MagnumKare%20Helpdesk,%20here%20are%20the%20details%20for%20Patient%20Referral%20ID%20${booking.id}.%20Patient:%20${encodeURIComponent(booking.patientName)}%20(${booking.age}%20yrs),%20referred%20to%20Dr.%20${encodeURIComponent(booking.doctorName)}%20for%20${booking.date}%20at%20${booking.time}.%20Status:%20${booking.status.toUpperCase()}." target="_blank" class="btn-whatsapp" title="WhatsApp Referral Details to MagnumKare">
+        <a href="https://wa.me/919336300420?text=Hello%20MagnumKare%20Helpdesk,%20here%20are%20the%20details%20for%20Patient%20Referral%20ID%20${booking.id}.%20Patient:%20${encodeURIComponent(booking.patientName)}%20(${booking.age}%20yrs),%20referred%20by%20${encodeURIComponent(booking.referredBy || 'N/A')}%20(Phone:%20${encodeURIComponent(booking.referredByPhone || 'N/A')}),%20referred%20to%20Dr.%20${encodeURIComponent(booking.doctorName)}%20for%20${booking.date}%20at%20${booking.time}.%20Status:%20${booking.status.toUpperCase()}." target="_blank" class="btn-whatsapp" title="WhatsApp Referral Details to MagnumKare">
           <i data-lucide="message-square" style="width: 16px; height: 16px;"></i>
           <span>WhatsApp Details</span>
         </a>
@@ -1661,8 +1746,9 @@ Instructions:
 5. If the user asks about a specific doctor (e.g. "dr akash", "dr ankitaverma"), provide their details in the user's style, and put their ID in "recommended_doctor_ids".
 6. Map Devanagari Hindi, Hinglish, and English medical complaints of patients to the correct specialties:
    - Children: "mera baccha", "mere bacche ko", "बच्चा", "बच्चे", "beta/beti ko bukhar/cough" -> Pediatrics (Dr. Gaurav Mishra, Dr. S.K. Jain)
-   - Stomach issues: "pet dard", "pet me dard", "stomach pain", "पेट दर्द", "गैस", "digestive/gas problem" -> General Medicine (Dr. Rishabh Nayak)
-   - Dengue, fever: "dengue", "dengu", "dengue fever", "डेंगू", "बुखार", "bukhar/cold/weakness" -> General Medicine (Dr. Rishabh Nayak)
+   - Stomach issues: "pet dard", "pet me dard", "stomach pain", "पेट दर्द", "गैस", "digestive/gas problem" -> General Medicine (Dr. Rishabh Nayak, Dr. Shailendra Kishore Verma, Dr. Tanmay Agrawal)
+   - Dengue, fever: "dengue", "dengu", "dengue fever", "डेंगू", "बुखार", "bukhar/cold/weakness" -> General Medicine (Dr. Rishabh Nayak, Dr. Shailendra Kishore Verma, Dr. Tanmay Agrawal)
+   - Senior Citizen Care / Geriatrics: "geriatric", "senior citizen", "old age", "bujurg", "budhape", "elderly" -> General Medicine (Dr. Shailendra Kishore Verma)
    - Joint/Bone/Injuries: "perr m chot", "pair me chot", "haddi tootna", "ghutne me dard", "जोड़ों का दर्द", "हड्डी टूटना", "कमार दर्द", "kamar dard" -> Orthopedics (Dr. Pradeep Yadav)
    - Surgery/Stones/Piles: "operation", "pathri", "bawasir", "hernia", "ऑपरेशन", "पित्त की पथरी", "बवासीर" -> General Surgery (Dr. Akash)
    - Eye issues: "aankh ki samasya", "aankh me dard", "dhundhla dikhna", "motiyabind", "आँख", "मोतियाबिंद", "धुंधला" -> Eye Specialist (Dr. Manmohan Lal Gupta)
@@ -1671,6 +1757,7 @@ Instructions:
    - Dental: "daant me dard", "keeda lagna", "दांत दर्द", "मसूड़े" -> Dentist (Dr. Puneet Jain)
    - Pulmonology/Chest: "cough", "asthma", "saans me takleef", "dama", "फेफड़े", "खांसी", "दमा" -> Pulmonologist / Chest Specialist (Dr. Ankita Verma, Dr. Shubham Jain)
    - ICU/Anaesthesia: "icu", "anesthesia", "behoshi", "sunn karna", "बेहोशी", "आईसीयू" -> Anaesthesiology & ICU Specialist (Dr. Saurabh Mishra)
+   - Urology/Kidney: "urine infection", "kidney stone", "peshab me jalan", "pathri", "पेशाब में जलन", "किडनी", "प्रोस्टेट" -> Urology (Dr. Mahesh Tripathi)
 7. If the user uses abusive or inappropriate language, respond with a polite bilingual warning to maintain polite clinical decorum. Do not recommend any doctors.
 8. You MUST return your response ONLY as a JSON object with the following fields:
 {
@@ -1729,8 +1816,9 @@ Make sure recommended_doctor_ids contains ONLY the exact string IDs of matched d
         ortho: ["joint", "joint pain", "bone", "fracture", "orthopedics", "knee", "hip", "arthritis", "ligament", "sprain", "ortho", "haddi", "haddiyan", "jod", "ghutna", "kamar dard", "peeth dard", "chot", "perr m dard", "pair m dard", "हड्डी", "हड्डियां", "जोड़", "जोड़ों का दर्द", "घुटने", "गठिया", "मोच", "टूटना"],
         derma: ["skin", "acne", "pimples", "dermatologist", "hair fall", "melasma", "psoriasis", "rash", "itching", "eczema", "hair loss", "chamdi", "daane", "pimpal", "khujli", "chakte", "allargy", "त्वca", "त्वचा", "चमड़ी", "मुहासे", "खुजली", "चकत्ते", "बाल झड़ना", "एलर्जी"],
         chest: ["cough", "asthma", "chest", "lungs", "breathing difficulty", "breath", "pulmonologist", "copd", "tuberculosis", "tb", "pneumonia", "bronchitis", "khansi", "dama", "saans", "seene me dard", "chhati me dard", "खांसी", "दमा", "अस्थमा", "फेफड़े", "सांस फूलना", "टीबी", "निमोनिया", "सीना", "छाती"],
-        medicine: ["fever", "cold", "diabetes", "stomach", "physician", "internal medicine", "blood pressure", "bp", "weakness", "infection", "bukhar", "bokhar", "sardi jukam", "sugar", "kamjori", "dengue", "dengu", "pet dard", "pet me dard", "बुखार", "सर्दी", "जुकाम", "मधुमेह", "शुगर", "बीपी", "कमजोरी", "डेंगू", "मलेरिया", "टायफाइड", "पेट दर्द"],
+        medicine: ["fever", "cold", "diabetes", "stomach", "physician", "internal medicine", "blood pressure", "bp", "weakness", "infection", "bukhar", "bokhar", "sardi jukam", "sugar", "kamjori", "dengue", "dengu", "pet dard", "pet me dard", "बुखार", "सर्दी", "जुकाम", "मधुमेह", "शुगर", "बीपी", "कमजोरी", "डेंगू", "मलेरिया", "टायफाइड", "पेट दर्द", "geriatric", "geriatrics", "senior citizen", "old age", "bujurg", "budhape", "elderly"],
         surgery: ["surgery", "surgeon", "laparoscopic", "gallstone", "gallstones", "hernia", "appendicitis", "appendix", "piles", "fissure", "fistula", "breast surgery", "operation", "pathri", "bawasir", "cheera", "cut", "ऑपरेशन", "सर्जरी", "पित्त की पथरी", "हर्निया", "अपेंडिक्स", "बवासीर"],
+        urology: ["urology", "urologist", "urinary", "urine", "kidney", "prostate", "kidney stone", "bladder", "renal", "peshab", "peshab me jalan", "peshab me dard", "mutra", "bar bar peshab aana", "पेशाब", "पेशाब में जलन", "किडनी", "किडनी की पथरी", "मूत्र"],
         ent: ["anesthesia", "anaesthetic", "sedation", "ventilator", "icu", "critical care", "intensive care", "unconscious", "pain block", "numbness", "behoshi", "behosh", "sunn karna", "sun", "बेहोशी", "बेहोश", "सुन्न करना", "आईसीयू", "वेंटीलेटर"]
       };
 
@@ -1851,7 +1939,8 @@ Make sure recommended_doctor_ids contains ONLY the exact string IDs of matched d
         ortho: ["joint", "bone", "fracture", "ortho", "knee", "hip", "ligament", "sprain", "xray", "x-ray"],
         derma: ["skin", "acne", "pimple", "derma", "hair", "scalp", "allergy", "melasma", "eczema"],
         chest: ["chest", "lung", "cough", "asthma", "pulmono", "tb", "copd", "pneumonia", "sputum", "respiratory", "bronch"],
-        surgery: ["surgery", "surgeon", "laparoscopic", "gallstone", "gallstones", "hernia", "appendicitis", "appendix", "piles", "fissure", "fistula", "breast"]
+        surgery: ["surgery", "surgeon", "laparoscopic", "gallstone", "gallstones", "hernia", "appendicitis", "appendix", "piles", "fissure", "fistula", "breast"],
+        urology: ["urology", "kidney", "urine", "prostate", "bladder", "stone", "renal", "peshab", "mutra"]
       };
 
       let matchedCategory = null;
