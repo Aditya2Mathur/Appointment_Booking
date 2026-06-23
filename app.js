@@ -1609,10 +1609,43 @@ document.addEventListener("DOMContentLoaded", () => {
     DOM.chatbotLauncher.classList.remove("chatbot-open");
   }
 
+  let isChatbotProcessing = false;
+
+  function setChatbotLoadingState(isLoading) {
+    isChatbotProcessing = isLoading;
+    if (!DOM.chatbotTextInput) return;
+
+    if (isLoading) {
+      DOM.chatbotTextInput.disabled = true;
+      if (DOM.chatbotSendBtn) DOM.chatbotSendBtn.disabled = true;
+      if (DOM.chatbotAttachBtn) DOM.chatbotAttachBtn.disabled = true;
+      DOM.chatbotTextInput.placeholder = "Please wait, assistant is typing...";
+      
+      const inputArea = DOM.chatbotTextInput.closest(".chatbot-input-area");
+      if (inputArea) inputArea.classList.add("loading-active");
+    } else {
+      DOM.chatbotTextInput.disabled = false;
+      if (DOM.chatbotSendBtn) DOM.chatbotSendBtn.disabled = false;
+      if (DOM.chatbotAttachBtn) DOM.chatbotAttachBtn.disabled = false;
+      
+      const isHinglish = (State.chatLanguage === "hinglish");
+      DOM.chatbotTextInput.placeholder = isHinglish
+        ? "Apne lakshan likhein (jaise bukhar, khansi)..."
+        : "Type symptoms (e.g., cough, fever)...";
+      
+      const inputArea = DOM.chatbotTextInput.closest(".chatbot-input-area");
+      if (inputArea) inputArea.classList.remove("loading-active");
+      
+      DOM.chatbotTextInput.focus();
+    }
+  }
+
   function handleSendMessage() {
+    if (isChatbotProcessing) return;
     const text = DOM.chatbotTextInput.value.trim();
     if (!text) return;
 
+    setChatbotLoadingState(true);
     appendMessage("user", text);
     DOM.chatbotTextInput.value = "";
 
@@ -1719,6 +1752,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // Show thinking loader
     const typingMsg = isHinglish ? "Bot soch raha hai..." : "Bot is thinking...";
     appendMessage("bot", typingMsg);
+
+    try {
 
     // Prepare system prompt and history
     const doctorsBrief = DOCTORS.map(d => ({
@@ -1859,14 +1894,24 @@ Make sure recommended_doctor_ids contains ONLY the exact string IDs of matched d
       };
     };
 
-    const result = await callOpenAI(messages, offlineFallback);
+      const result = await callOpenAI(messages, offlineFallback);
 
-    // Remove typing loader
-    State.chatHistory = State.chatHistory.filter(msg => msg.text !== typingMsg);
-    localStorage.setItem("magnum_chat_history", JSON.stringify(State.chatHistory));
-    renderChatHistory();
-
-    appendMessage("bot", result.reply, null, result.recommended_doctor_ids || []);
+      // Remove typing loader first to keep sequence clean
+      State.chatHistory = State.chatHistory.filter(msg => msg.text !== typingMsg);
+      appendMessage("bot", result.reply, null, result.recommended_doctor_ids || []);
+    } catch (err) {
+      console.error("Error in analyzeSymptomsAndRespond:", err);
+      State.chatHistory = State.chatHistory.filter(msg => msg.text !== typingMsg);
+      const errMsg = isHinglish
+        ? "Maaf kijiyega, kuch takniki dikkat aa gayi hai. Kripya thodi der baad dobara koshish karein."
+        : "I'm sorry, I encountered a technical issue. Please try again in a moment.";
+      appendMessage("bot", errMsg);
+    } finally {
+      State.chatHistory = State.chatHistory.filter(msg => msg.text !== typingMsg);
+      localStorage.setItem("magnum_chat_history", JSON.stringify(State.chatHistory));
+      renderChatHistory();
+      setChatbotLoadingState(false);
+    }
   }
 
   // Register Chatbot Listeners
@@ -1975,11 +2020,22 @@ Make sure recommended_doctor_ids contains ONLY the exact string IDs of matched d
       };
     };
 
-    const result = await callOpenAI(messages, offlineFallback);
-    appendMessage("bot", result.reply, null, result.recommended_doctor_ids || []);
+    try {
+      const result = await callOpenAI(messages, offlineFallback);
+      appendMessage("bot", result.reply, null, result.recommended_doctor_ids || []);
+    } catch (err) {
+      console.error("Error in analyzeReportAndRespond:", err);
+      const errMsg = isHinglish
+        ? "Maaf kijiyega, report analyze karne mein kuch dikkat aayi. Kripya thodi der baad dobara koshish karein."
+        : "I'm sorry, I encountered an issue analyzing the report. Please try again in a moment.";
+      appendMessage("bot", errMsg);
+    } finally {
+      setChatbotLoadingState(false);
+    }
   }
 
   DOM.chatbotFileInput.addEventListener("change", (e) => {
+    if (isChatbotProcessing) return;
     const file = e.target.files[0];
     if (!file) return;
 
@@ -1988,7 +2044,13 @@ Make sure recommended_doctor_ids contains ONLY the exact string IDs of matched d
       return;
     }
 
+    setChatbotLoadingState(true);
+
     const reader = new FileReader();
+    reader.onerror = function () {
+      setChatbotLoadingState(false);
+      showToast("Upload Error", "Failed to read file.", "danger");
+    };
     reader.onload = function (evt) {
       const base64Url = evt.target.result;
 
